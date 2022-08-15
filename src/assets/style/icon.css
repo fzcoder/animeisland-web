@@ -1,0 +1,44 @@
+.icon-tv-primary-40px {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-image: url(../img/icon-tv-primary.png);
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
+}
+
+.icon-play {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/icon-play.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+
+.icon-pause {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/icon-pause.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+
+.icon-fullscreen {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/icon-fullscreen.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
+
+.icon-volumn {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-image: url(../img/icon-volumn.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+}
