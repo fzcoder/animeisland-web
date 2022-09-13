@@ -26,7 +26,7 @@ const HTTP_SC_INTERNAL_SERVER_ERROR = 500;
 
 // create instance
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://192.168.1.105:8090/api',
+  baseURL: import.meta.env.VITE_APP_BASE_URL,
   timeout: 10000,
 });
 

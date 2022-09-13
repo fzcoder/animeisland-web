@@ -18,31 +18,27 @@ git clone git@github.com:fzcoder/animeisland-web.git
 ### 2.安装依赖
 
 ```shell
-npm install
+yarn
 ```
 
 ### 3.修改配置信息
 
-在项目根路径下`src/api/axios.ts`文件中修改以下内容:
+在项目根路径下`env.development`和`env.production`文件中修改以下内容:
 
-```typescript
-// create instance
-const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://{your_server_host}:{port}/api',
-  timeout: 10000,
-});
+```
+VITE_APP_BASE_URL={your_server_url}
 ```
 
 ### 4.启动项目
 
 ```shell
-npm run dev
+yarn dev
 ```
 
 ## 如何进行打包?
 
 ```shell
-npm run build
+yarn build
 ```
 
 执行完成后产物位于项目根路径下`dist/`文件夹中
