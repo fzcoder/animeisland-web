@@ -32,14 +32,16 @@ import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { HomeOutlined, NumberOutlined } from '@ant-design/icons-vue'
+import { getUserInfo } from '@/api/auth/user'
 const router = useRouter()
 
 const channelList: Ref<Record<string, any>[]> = ref([])
 
 const getChannelList = async () => {
   try {
+    const {id: uid} = await getUserInfo();
     const { data: result } = await axiosInstance.get('/video/channel', {
-      params: { uid: '' }
+      params: { uid }
     })
     channelList.value = result.data
   } catch (err: any) {
