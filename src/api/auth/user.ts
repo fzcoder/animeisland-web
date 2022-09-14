@@ -7,7 +7,7 @@ export declare type UserInfo = {
 export const getUserInfo = async (): Promise<UserInfo> => {
   try {
     // const userInfo = JSON.parse(localStorage.getItem('userInfo') || "");
-    const userInfo = {sub: "", email: "", nickname: "", picture: ""}
+    const userInfo = {sub: "user_default", email: "", nickname: "", picture: ""}
     return Promise.resolve({
       id: userInfo['sub'] || "",
       email: userInfo['email'] || "",
