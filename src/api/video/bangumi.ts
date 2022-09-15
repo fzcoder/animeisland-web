@@ -2,6 +2,7 @@ import { get } from "../request";
 import type { PageResultSet } from "../request";
 import { getUserInfo } from "../auth/user";
 
+export type BangumiProps = Record<string, any>;
 export const getView = async (id?: string | number): Promise<Record<string, any>> => {
   try {
     if (id === undefined) { return Promise.reject("The 'id' is undefined"); }

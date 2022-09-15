@@ -1,6 +1,6 @@
 import * as VueRouter from 'vue-router'
 // 网站主体
-const Web = () => import(/* webpackChunkName: "container" */'@/views/Web.vue')
+const AppContainer = () => import(/* webpackChunkName: "container" */'@/components/app/AppContainer.vue')
 const Home = () => import(/* webpackChunkName: "index" */ '@/views/home/Index.vue')
 const ChannelDetails = () => import(/* webpackChunkName: "category" */ '@/views/channel/Details.vue')
 const BangumiDetails = () => import(/* webpackChunkName: "media" */ '@/views/bangumi/Details.vue')
@@ -14,7 +14,7 @@ const router = VueRouter.createRouter({
   routes: [
     {
       path: '/',
-      component: Web,
+      component: AppContainer,
       meta: {
         requireLogin: false,
         title: '动漫岛 | 首页'

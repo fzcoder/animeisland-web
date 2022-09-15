@@ -3,31 +3,31 @@
     <div class="app-channel-details-header">
       <a-form :model="queryParams">
         <a-form-item label="类型" name="type_id">
-          <a-radio-group v-model:value="queryParams.type_id" v-on:change="selectItems.type.onChange">
-            <a-radio
+          <a-select v-model:value="queryParams.type_id" v-on:change="selectItems.type.onChange">
+            <a-select-option
               v-for="item in selectItems.type.list"
               :key="item.value"
               :value="item.value"
-            >{{ item.label  }}</a-radio>
-          </a-radio-group>
+            >{{ item.label  }}</a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="分级" name="grade_id">
-          <a-radio-group v-model:value="queryParams.grade_id" v-on:change="selectItems.grade.onChange">
-            <a-radio
+          <a-select v-model:value="queryParams.grade_id" v-on:change="selectItems.grade.onChange">
+            <a-select-option
               v-for="item in selectItems.grade.list"
               :key="item.value"
               :value="item.value"
-            >{{ item.label  }}</a-radio>
-          </a-radio-group>
+            >{{ item.label  }}</a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="状态" name="status">
-          <a-radio-group v-model:value="queryParams.status" v-on:change="selectItems.status.onChange">
-            <a-radio
+          <a-select v-model:value="queryParams.status" v-on:change="selectItems.status.onChange">
+            <a-select-option
               v-for="item in selectItems.status.list"
               :key="item.value"
               :value="item.value"
-            >{{ item.label  }}</a-radio>
-          </a-radio-group>
+            >{{ item.label  }}</a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="年份" name="release_year">
           <a-select v-model:value="queryParams.release_year" v-on:change="selectItems.releaseYear.onChange">
@@ -54,6 +54,7 @@
         item-layout="horizontal"
         :data-source="records"
         :pagination="pagination"
+        :grid="{ gutter: 16, column: 2 }"
       >
         <template #header>
           <a-input-search
@@ -64,26 +65,14 @@
           />
         </template>
         <template #renderItem="{ item }">
-          <div class="app-channel-details-list-item" v-on:click="gotoBangumiDetailsPage(item.id)">
-            <a-row :gutter="16">
-              <a-col :span="6">
-                <a-image :src="item.cover" :preview="false" />
-              </a-col>
-              <a-col :span="18">
-                <a-descriptions :title="item.title" :column="2">
-                  <a-descriptions-item label="原标题" :span="2">{{item.originTitle}}</a-descriptions-item>
-                  <a-descriptions-item label="类型">{{item.type?.name}}</a-descriptions-item>
-                  <a-descriptions-item label="上映时间">{{item.releaseDate}}</a-descriptions-item>
-                  <a-descriptions-item label="标签" :span="2">
-                    <a-space>
-                      <a-tag v-for="tag in item.tags" :key="tag.id" :color="tag.colorHex">{{tag.name}}</a-tag>
-                    </a-space>
-                  </a-descriptions-item>
-                  <a-descriptions-item label="描述" :span="2">{{item.description}}</a-descriptions-item>
-                </a-descriptions>
-              </a-col>
-            </a-row>
-          </div>
+          <a-list-item>
+            <div @click="gotoBangumiDetailsPage(item.id)">
+              <a-space direction="vertical" :style="{display: 'flex'}">
+                <a-image :src="item.cover" :preview="false" :style="{borderRadius: '6px'}" />
+                <h4>{{item.title}}</h4>
+              </a-space>
+            </div>
+          </a-list-item>
         </template>
       </a-list>
     </div>
@@ -139,25 +128,22 @@ const getBangumiList = async () => {
 const selectItems = reactive({
   type: {
     list: [{ value: "all", label: "全部" }],
-    onChange: (e: any) => {
-      const currentValue = e.target?.value as string
-      queryParams.type_id = currentValue
+    onChange: (value: string) => {
+      queryParams.type_id = value
       getBangumiList()
     }
   },
   grade: {
     list: [{ value: "all", label: "全部" }],
-    onChange: (e: any) => {
-      const currentValue = e.target?.value as string
-      queryParams.grade_id = currentValue
+    onChange: (value: string) => {
+      queryParams.grade_id = value
       getBangumiList()
     }
   },
   status: {
     list: [{ value: -1, label: "全部" }],
-    onChange: (e: any) => {
-      const currentValue = e.target?.value as number
-      queryParams.status = currentValue
+    onChange: (value: string) => {
+      queryParams.status = Number.parseInt(value)
       getBangumiList()
     }
   },
@@ -218,10 +204,8 @@ const pagination = {
     getBangumiList()
   },
   total: 0,
-  showQuickJumper: true,
-  showSizeChanger: true,
-  showLessItems: true,
-  showTotal: (total: number) => `共 ${total} 条数据`
+  size: "small",
+  showTotal: (total: number) => `共 ${total} 部`
 }
 
 const gotoBangumiDetailsPage = (id: string) => {
@@ -264,8 +248,7 @@ watchEffect(() => {
 
 <style lang="less" scoped>
 .app-channel-details {
-  width: 1000px;
-  height: 100%;
+  width: 100%;
   padding: 20px;
   margin: 0 auto;
   overflow-x: hidden;

@@ -7,6 +7,15 @@
     background-repeat: no-repeat;
 }
 
+.icon-tv-primary-24px {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background-image: url(../img/icon-tv-primary.png);
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+}
+
 .icon-play {
     display: inline-block;
     width: 20px;

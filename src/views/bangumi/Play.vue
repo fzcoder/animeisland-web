@@ -11,7 +11,7 @@
           controls
           autoplay
         />
-        <div class="app-bangumi-play-controls">
+        <div class="app-bangumi-play-controls" v-if="false">
           <a-radio-group
             v-model:value="currentVideoSourceId"
             size="small"
@@ -26,55 +26,57 @@
           </a-radio-group>
         </div>
       </div>
-      <div class="app-bangumi-play-episode-list">
-        <div class="app-bangumi-play-episode-list-header">
-          <span>剧集</span>
-        </div>
-        <div class="app-bangumi-play-episode-list-content">
-          <div
-            :class="episodeId === episode.id ? `app-bangumi-play-episode-list-content-item-current` : `app-bangumi-play-episode-list-content-item`"
-            v-for="episode in episodeList"
-            :key="episode.id"
-            v-on:click="changeEpisode(episode.id)"
-          >
-            <span>{{ `${episode.orderName} ${episode.title}` }}</span>
-          </div>
-        </div>
-      </div>
     </div>
     <div class="app-bangumi-play-content">
-      <div class="app-bangumi-play-info">
-        <a-row>
-          <a-col :span="6">
-            <a-image :src="bangumi.cover" />
-          </a-col>
-          <a-col :span="18">
-            <div style="padding: 16px;">
-              <a-descriptions :column="2">
-                <template #title>
-                  <a v-on:click="gotoBangumiDetailsPage">
-                    <h4>{{ bangumi.title }}</h4>
-                  </a>
-                </template>
-                <a-descriptions-item label="类型">
-                  <span>{{ bangumi?.type?.name }}</span>
-                </a-descriptions-item>
-                <a-descriptions-item label="上映时间">
-                  <span>{{ bangumi.releaseDate }}</span>
-                </a-descriptions-item>
-                <a-descriptions-item label="标签" :span="2">
-                  <a-space>
-                    <a-tag v-for="tag in bangumi.tags" :key="tag.id" :color="tag.colorHex">{{ tag.name }}</a-tag>
-                  </a-space>
-                </a-descriptions-item>
-                <a-descriptions-item label="描述" :span="2">
-                  <span>{{ bangumi.description }}</span>
-                </a-descriptions-item>
-              </a-descriptions>
+      <a-tabs>
+        <a-tab-pane key="episodes">
+          <template #tab>
+            <div class="app-bangumi-play-content-tab-item">
+              <menu-unfold-outlined />
+              <span>剧集</span>
             </div>
-          </a-col>
-        </a-row>
-      </div>
+          </template>
+          <div class="app-bangumi-play-episode-list">
+            <a-row :gutter="8">
+              <a-col :span="12" v-for="episode in episodeList" :key="episode.id">
+                <div :class="episode.id === currentEpisode.id ? `app-bangumi-play-episode-item app-bangumi-play-episode-item-current` : 'app-bangumi-play-episode-item'" v-on:click="changeEpisode(episode.id)">
+                  <h4>{{ episode.orderName }}</h4>
+                  <span>{{ episode.title }}</span>
+                </div>
+              </a-col>
+            </a-row>
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="details">
+          <template #tab>
+            <div class="app-bangumi-play-content-tab-item">
+              <InfoCircleOutlined />
+              <span>详情</span>
+            </div>
+          </template>
+          <div class="app-bangumi-play-info">
+            <a-descriptions :column="2">
+              <a-descriptions-item label="名称" :span="2">
+                <span>{{ bangumi?.title }}</span>
+              </a-descriptions-item>
+              <a-descriptions-item label="类型" :span="2">
+                <span>{{ bangumi?.type?.name }}</span>
+              </a-descriptions-item>
+              <a-descriptions-item label="上映时间" :span="2">
+                <span>{{ bangumi.releaseDate }}</span>
+              </a-descriptions-item>
+              <a-descriptions-item label="标签" :span="2">
+                <a-space>
+                  <a-tag v-for="tag in bangumi.tags" :key="tag.id" :color="tag.colorHex">{{ tag.name }}</a-tag>
+                </a-space>
+              </a-descriptions-item>
+              <a-descriptions-item label="描述" :span="2">
+                <span>{{ bangumi.description }}</span>
+              </a-descriptions-item>
+            </a-descriptions>
+          </div>
+        </a-tab-pane>
+      </a-tabs>
     </div>
   </div>
 </template>
@@ -87,6 +89,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getView, getList } from '@/api/video/episode'
 import { getView as getBangumiView } from '@/api/video/bangumi'
 import { message } from 'ant-design-vue'
+import { MenuUnfoldOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 
 type EpisodeProps = Record<string, any>
 type VideoItemProps = Record<string, any>
@@ -150,11 +153,6 @@ const getBangumi = async (bangumiId: string) => {
     return Promise.reject(err)
   }
 }
-
-const gotoBangumiDetailsPage = () => {
-  router.push(`/bangumi/details/${bangumi.value.id}`)
-}
-
 const changeEpisode = (episodeId: string) => {
   router.push(`/bangumi/play/${episodeId}`)
 }
@@ -180,44 +178,27 @@ watchEffect(() => {
 
 <style lang="less" scoped>
 .app-bangumi-play {
-  width: 1000px;
-  height: 100%;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   margin: 0 auto;
   border-left: 1px solid #434343;
   border-right: 1px solid #434343;
 }
-.app-bangumi-play::-webkit-scrollbar {
-  width: 5px; 
-}
-.app-bangumi-play::-webkit-scrollbar-track {
-  background-color: #1f1f1f;
-}
-.app-bangumi-play::-webkit-scrollbar-thumb {
-  background: #434343;
-  border-radius: 5px;
-}
 .app-bangumi-play-header {
   display: flex;
-  height: 506px;
 }
 .app-bangumi-play-player-wrapper {
-  width: 768px;
-  height: 506px;
+  width: 100%;
   background-color: #000;
-  border-bottom: 1px solid #434343;
 }
 .app-bangumi-play-player-header {
-  width: 768px;
-  height: 38px;
-  padding: 8px 16px 8px 16px;
+  padding: 8px;
   background-color: #000;
   color: #fff;
 }
 #video-player { 
-  width: 768px;
-  height: 432px;
+  width: 100%;
   padding: 0px;
   margin: 0px;
 }
@@ -227,59 +208,36 @@ watchEffect(() => {
   padding-left: 6px;
   padding-right: 6px;
 }
-.app-bangumi-play-episode-list {
-  width: 100%;
-  height: 506px;
-  background-color: #1f1f1f;
-  overflow: hidden;
+.app-bangumi-play-content-tab-item {
+  padding-left: 8px;
+  padding-right: 8px;
   display: flex;
-  flex-direction: column;
-  border-left: 1px solid #434343;
-  border-bottom: 1px solid #434343;
+  align-items: center;
 }
-.app-bangumi-play-episode-list-header {
+.app-bangumi-play-episode-list {
   padding-left: 16px;
   padding-right: 16px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #434343;
-  flex: 0;
+  height: inherit;
 }
-.app-bangumi-play-episode-list-content {
-  padding: 8px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  flex: 1;
-}
-.app-bangumi-play-episode-list-content::-webkit-scrollbar {
-  width: 5px; 
-}
-.app-bangumi-play-episode-list-content::-webkit-scrollbar-track {
-  background-color: #1f1f1f;
-}
-.app-bangumi-play-episode-list-content::-webkit-scrollbar-thumb {
-  background: #434343;
-  border-radius: 5px;
-}
-.app-bangumi-play-episode-list-content-item {
-  padding: 8px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.app-bangumi-play-episode-list-content-item-current {
-  padding: 8px;
-  background-color: #434343;
+.app-bangumi-play-episode-item-current {
   color: #1890ff;
+  h4 {
+    color: #1890ff; 
+  }
+}
+.app-bangumi-play-episode-item {
+  padding: 8px;
+  background-color: #434343;
+  border-radius: 8px;
+  margin-bottom: 8px;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
-.app-bangumi-play-episode-list-content-item:hover {
+.app-bangumi-play-episode-item:hover {
   cursor: pointer;
-  background-color: #434343;
 }
-.app-bangumi-play-info  {
-  padding: 16px;
+.app-bangumi-play-info {
+  padding: 8px 16px;
 }
 </style>

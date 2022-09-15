@@ -8,9 +8,10 @@
         }"
       >
         <div class="app-bangumi-details-info-wrapper">
+          <h2 :style="{color: '#fff'}">{{ bangumi.title }}</h2>
           <a-row :gutter="16">
             <a-col :span="8">
-              <a-image :src="bangumi.cover" />
+              <a-image :src="bangumi.cover" :preview="false" />
             </a-col>
             <a-col :span="16">
               <div class="app-bangumi-details-info-content">
@@ -19,23 +20,14 @@
                   :labelStyle="{color: '#fff'}"
                   :contentStyle="{color: '#fff'}"
                 >
-                  <template #title>
-                    <h3 :style="{color: '#fff'}">{{ bangumi.title }}</h3>
-                  </template>
-                  <a-descriptions-item label="原标题" :span="2">
-                    <span>{{ bangumi.originTitle }}</span>
-                  </a-descriptions-item>
-                  <a-descriptions-item label="类型">
+                  <a-descriptions-item label="类型" :span="2">
                     <span>{{ bangumi.type?.name }}</span>
                   </a-descriptions-item>
-                  <a-descriptions-item label="上映时间">
+                  <a-descriptions-item label="状态" :span="2">
+                    <span>{{ bangumi.status === 0 ? "即将上映" : (bangumi.status === 1 ? "连载中" : "已完结")}}</span>
+                  </a-descriptions-item>
+                  <a-descriptions-item label="上映时间" :span="2">
                     <span>{{ bangumi.releaseDate }}</span>
-                  </a-descriptions-item>
-                  <a-descriptions-item label="标签" :span="2">
-                    <a-tag v-for="tag in bangumi.tags" :key="tag.id" :color="tag.colorHex">{{ tag.name }}</a-tag>
-                  </a-descriptions-item>
-                  <a-descriptions-item label="描述" :span="2">
-                    <span>{{ bangumi.description }}</span>
                   </a-descriptions-item>
                 </a-descriptions>
               </div>
@@ -54,13 +46,38 @@
             </template>
             <div class="app-bangumi-details-episode-list">
               <a-row :gutter="8">
-                <a-col :span="6" v-for="episode in episodeList" :key="episode.id">
+                <a-col :span="12" v-for="episode in episodeList" :key="episode.id">
                   <div class="app-bangumi-details-episode-item" v-on:click="playEpisode(episode.id)">
                     <h4>{{ episode.orderName }}</h4>
                     <span>{{ episode.title }}</span>
                   </div>
                 </a-col>
               </a-row>
+            </div>
+          </a-tab-pane>
+          <a-tab-pane key="details">
+            <template #tab>
+              <div class="app-bangumi-details-content-tab-item">
+                <InfoCircleOutlined />
+                <span>详情</span>
+              </div>
+            </template>
+            <div :style="{padding: '8px 16px'}">
+              <a-descriptions
+                :column="2"
+                :labelStyle="{color: '#fff'}"
+                :contentStyle="{color: '#fff'}"
+              >
+                <a-descriptions-item label="原标题" :span="2">
+                  <span>{{ bangumi.originTitle }}</span>
+                </a-descriptions-item>
+                <a-descriptions-item label="标签" :span="2">
+                  <a-tag v-for="tag in bangumi.tags" :key="tag.id" :color="tag.colorHex">{{ tag.name }}</a-tag>
+                </a-descriptions-item>
+                <a-descriptions-item label="描述" :span="2">
+                  <span>{{ bangumi.description }}</span>
+                </a-descriptions-item>
+              </a-descriptions>
             </div>
           </a-tab-pane>
         </a-tabs>
@@ -76,7 +93,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getView } from '@/api/video/bangumi'
 import { getList } from '@/api/video/episode'
 import { message } from 'ant-design-vue'
-import { MenuUnfoldOutlined } from '@ant-design/icons-vue'
+import { MenuUnfoldOutlined, InfoCircleOutlined } from '@ant-design/icons-vue'
 
 type BangumiProps = Record<string, any>
 type EpisodeProps = Record<string, any>
@@ -131,8 +148,7 @@ watchEffect(() => {
   height: 100%;
 }
 .app-bangumi-details {
-  width: 1000px;
-  height: 100%;
+  width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
   margin: 0 auto;
@@ -152,6 +168,7 @@ watchEffect(() => {
   border-radius: 5px;
 }
 .app-bangumi-details-info-wrapper {
+  padding: 16px;
   backdrop-filter: blur(40px);
 }
 .app-bangumi-details-info-content {

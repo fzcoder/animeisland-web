@@ -5,6 +5,7 @@ import App from './App.vue'
 import {
   Button,
   Col,
+  Card,
   Descriptions,
   List,
   Pagination,
@@ -31,6 +32,7 @@ app.use(router)
 // use Ant Design of Vue
 app.use(Button)
 app.use(Col)
+app.use(Card)
 app.use(Descriptions)
 app.use(List)
 app.use(Pagination)
